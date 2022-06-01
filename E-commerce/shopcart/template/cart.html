@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block metadescription %}
+   Review the items and place the order
+{% endblock %}
+
+{% block title %}
+    cart -Amazon PVT LTD
+{% endblock %}
+{% block content %}
+
+{% if not cart_items %}
+<div>
+    <div class="text-center">
+        <br>
+        <h1 class="text-center my_title">
+            Cart is Empty
+        </h1>
+        <br>
+        <p class="text-center">
+            Please click <a href="{% url 'Amazon:allPodCat' %}">Here</a> For shopping
+        </p>
+
+    </div>
+</div>
+{% else %}
+<div>
+    <div class="text-center">
+        <br>
+        <h1 class="text-center my_title">
+            Your Shopping Cart
+        </h1>
+        <br>
+    </div>
+</div>
+<div class="row mx_auto">
+    <div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center">
+       <table class="table custom_table">
+           <thead class="custom_thead">
+           <tr>
+               <th colspan="5">
+                   Your Items
+               </th>
+           </tr>
+           </thead>
+           <tbody>
+           {% for c in cart_items %}
+           <tr>
+               <td>
+                   <a href="{% url 'cart:add_cart' c.products.id %}"><img src="{{c.products.image.url}}" alt="" style="width:100; height:100px;" class="float-left rounded custom_image"></a>
+               </td>
+               <td class="text-left">
+                   {{c.products.name}}
+                   <br>
+                   SKU:{{c.products.id}}
+                   <br>
+                   Price: $ {{c.products.price}}
+                   <br>
+                   Qty: {{c.quantity}} x $ {{c}}
+               </td>
+               <td>
+                   $ {{c.sub_total}}
+               </td>
+               {% if c.quantity < c.products.stock %}
+               <td>
+                   <a href="{% url 'cart:add_cart' c.products.id %}" class="custom_a"> <i class="fa fa-plus-circle custom_icon" style="font-size:24px"></i></a>
+                   &nbsp;<a href="{% url 'cart:cart_remove' c.products.id %}" class="custom_a"><i class="fa fa-minus-circle custom_icon" style="font-size:24px"></i></a>
+                   &nbsp;<a href="{% url 'cart:full_remove' c.products.id %}" class="custom_icon"><i class="fa fa-trash" style="font-size:24px"></i></a>
+               </td>
+               {% else %}
+               <td>
+                   &nbsp;<a href="{% url 'cart:cart_remove' c.products.id %}" class="custom_a"><i class="fa fa-minus-circle" style="font-size:24px"></i></a>
+                   &nbsp;<a href="{% url 'cart:full_remove' c.products.id %}" class="custom_icon"><i class="fa fa-trash" style="font-size:24px"></i></a>
+               </td>
+               {% endif %}
+           </tr>
+           {% endfor %}
+           </tbody>
+       </table>
+    </div>
+    <div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center">
+        <table class="table custom_table">
+            <thead class="custom_thead">
+            <tr>
+                <th>
+                    Checkout
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    Confirm your items before payment
+                </td>
+            </tr>
+            <tr>
+                <td class="text-left">
+                    Your Total Is: <strong>{{ total }}</strong>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="mx_auto">
+            <a href="{% url 'Amazon:allPodCat' %}" class="btn btn-secondary btn-block custom_button">Continue Shopping</a>
+            <button class="btn btn-success">Proceed to pay</button>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
