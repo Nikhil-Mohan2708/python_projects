@@ -1,0 +1,17 @@
+.banner{
+
+background-color:deeppink;
+width:100%;
+height:200px;
+margin-bottom:50px;
+}
+
+.banner-text{
+
+  position: relative;
+  width: auto;
+  text-align :center;
+  top:50%;
+  color:white;
+  transform:transform;
+}
