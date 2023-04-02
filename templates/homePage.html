@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    body {
+        background-image: url("{% static 'img/background.jpg' %}");
+        background-repeat: no-repeat;
+        background-size: 2000px;
+    }
+    .navbar {
+    background-color: gray; /* Set the background color of the navbar */
+    padding: 1px 5px; /* Add some padding to the navbar */
+    }
+</style>
+
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg" style="height:60px;">
+  <a class="navbar-brand" href="#"><img src="{% static 'img/logo.png' %}" alt="logo" style="width:60px;height:60px;"></a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <p style="color:white;">BLOSSOM<span class="sr-only"></span></p>
+    <ul class="navbar-nav ml-auto" style="margin-right: 100px;">
+      <li class="nav-item">
+        <button class="btn btn-success mr-2" type="button" onclick="location.href='{% url 'flowerApp:login' %}'">Login</button>
+      </li>
+      <li class="nav-item">
+        <button class="btn btn-danger" type="button" onclick="location.href='{% url 'flowerApp:register' %}'">Register</button>
+      </li>
+      <div class="dropdown ml-2">
+      <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Branches
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      <form>
+        <label for="district-select">District:</label>
+        <select id="district-select">
+          <option value="">Select a district</option>
+          {% for district in districts %}
+            <option value="{{ district.id }}">{{ district.name }}</option>
+          {% endfor %}
+        </select>
+
+        <br>
+        <label for="city-select">City:</label>
+        <select id="city-select" disabled>
+          <option value="">Select a city</option>
+        </select>
+      </form>
+
+  <script>
+$(document).ready(function() {
+  $('#district-select').change(function() {
+    var districtId = $(this).val();
+    if (districtId) {
+      $.ajax({
+        url: '/get_cities/',
+        data: {
+          'district_id': districtId
+        },
+        dataType: 'json',
+        success: function(response) {
+          $('#city-select').empty().append('<option value="">Select a city</option>');
+          $.each(response.cities, function(i, city) {
+            $('#city-select').append($('<option>', {
+              value: city.name,
+              text: city.name
+            }));
+          });
+          $('#city-select').prop('disabled', false);
+        },
+        error: function(response) {
+          $('#city-select').empty().append('<option value="">Select a city</option>');
+          $('#city-select').prop('disabled', true);
+        }
+      });
+    } else {
+      $('#city-select').empty().append('<option value="">Select a city</option>');
+      $('#city-select').prop('disabled', true);
+    }
+  });
+
+  $('#city-select').change(function() {
+    var districtName = $('#district-select option:selected').text();
+    var cityName = $(this).val();
+    if (cityName) {
+      var wikipediaUrl = 'https://en.wikipedia.org/wiki/' + cityName;
+      window.location.href = wikipediaUrl;
+    }
+  });
+});
+</script>
+
+
+      </div>
+      </div>
+    </ul>
+  </div>
+</nav>
+
+
+<footer style="position: fixed; bottom: 0; width: 100%; color:">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4">
+        <h3>Contact Us</h3>
+        <ul>
+          <li>1234 Blossom Street</li>
+          <li>Springfield, USA</li>
+          <li>Phone: (123) 456-7890</li>
+          <li>Email: info@blossomflowerapp.com</li>
+        </ul>
+      </div>
+      <div class="col-md-4">
+        <h3>About Us</h3>
+        <p>Blossom Flower is a mobile app that makes it easy to find and order beautiful, fresh flowers for any occasion.</p>
+      </div>
+      <div class="col-md-4">
+        <h3>Follow Us</h3>
+        <ul class="social-media">
+          <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+          <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+          <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+          <li><a href="#"><i class="fa fa-pinterest"></i></a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
+{% endblock %}
